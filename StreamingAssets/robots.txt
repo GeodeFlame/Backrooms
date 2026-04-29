@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /logs/
+Disallow: /themes/
+Disallow: /*.ajax$
+Disallow: /about-us
+Disallow: /dmca
+Disallow: /contact-us
+Disallow: /privacy-policy
+Disallow: /terms-of-use
+Disallow: /terms-of-service
