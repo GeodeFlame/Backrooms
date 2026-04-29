@@ -12,9 +12,9 @@
 
 </head>
 
-<body>
+<body style="margin:0;padding:0;overflow:hidden;">
     <div id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas" width=960 height=600></canvas>
+        <canvas id="unity-canvas"></canvas>
         <div id="unity-loading-bar">
             <div id="unity-logo"></div>
             <div id="unity-progress-bar-empty">
@@ -82,11 +82,18 @@
 
             unityShowBanner('WebGL builds are not supported on mobile devices.');
         } else {
-            // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-
-            canvas.style.width = "960px";
-            canvas.style.height = "600px";
+            // Desktop style: Fill entire screen
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
         }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+            }
+        });
 
         canvas.style.background = "url('" + buildUrl + "/Backrooms v1.6 - WebGL.jpg') center / cover";
         loadingBar.style.display = "block";
