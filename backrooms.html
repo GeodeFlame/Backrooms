@@ -64,9 +64,8 @@
  const height = showEmbed.getAttribute('data-height');
 
  // Construct the iframe HTML string
- const html = '<iframe class="game-iframe" id="game-area" src="https://backroomsgame.io/'&#32;+&#32;link_iframe&#32;+&#32;'" width="' + width + '" height="' + height + '"' +
+ const html = '<iframe class="game-iframe" id="game-area" src="' + link_iframe + '" width="' + width + '" height="' + height + '"' +
  'allow="autoplay; fullscreen; camera; focus-without-user-activation *; monetization; gamepad; keyboard-map *; xr-spatial-tracking; clipboard-write; web-share; accelerometer; magnetometer; gyroscope; display-capture"' +
- 'sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-scripts allow-same-origin allow-downloads"' +
  '" scrolling="none" frameborder="0" allowfullscreen></iframe>';
 
  if (_isMobile) {
@@ -1149,10 +1148,6 @@
  transform: translateY(-50%);
  }
 
- .box-comment .box-area-input .flex-comment {
-
- }
-
  .box-comment .box-area-input .send-comment .send {
  background: #ff3814;
  border-radius: 6px;
@@ -1488,7 +1483,7 @@
  .form__buttons {
  display: -ms-grid;
  display: grid;
- -ms-grid-columns: (1fr) [ 2 ];
+ -ms-grid-columns: 1fr 1fr;
  grid-template-columns: repeat(2, 1fr);
  -webkit-box-align: center;
  -ms-flex-align: center;

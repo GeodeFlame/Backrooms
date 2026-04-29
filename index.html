@@ -36,6 +36,30 @@
             const originalFetch = window.fetch;
             const originalXHROpen = XMLHttpRequest.prototype.open;
             
+            // Patch fetch to handle file:// URLs
+            window.fetch = function(input, init) {
+                // For file:// URLs, try to load as blob
+                if (typeof input === 'string' && input.startsWith('file://')) {
+                    return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', input, true);
+                        xhr.responseType = 'blob';
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                resolve(new Response(xhr.response));
+                            } else {
+                                reject(new Error('Failed to load file: ' + input));
+                            }
+                        };
+                        xhr.onerror = function() {
+                            reject(new Error('Failed to load file: ' + input));
+                        };
+                        xhr.send();
+                    });
+                }
+                return originalFetch.call(this, input, init);
+            };
+            
             // Patch XMLHttpRequest to not fail on file:// URLs
             XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
                 // Allow file:// URLs
