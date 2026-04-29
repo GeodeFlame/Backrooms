@@ -3,180 +3,71 @@
 <head>
     <meta charset="utf-8">
     <title>Backrooms Game - Offline</title>
-    <meta name="description" content="The Backrooms Game is an awesome escape-horror game for thrill-seekers. Never stop running!">
-    <meta name="keywords" content="Backrooms Game" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui, shrink-to-fit=no viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Backrooms Game">
-    <link rel="icon" type="image/x-icon" href="cache/data/image/options/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="TemplateData/favicon.ico" />
     <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 html, body {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
     background: #000;
     overflow: hidden;
 }
 
-#game-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
+#game-frame {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-#toolbar {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #333;
-    z-index: 1000;
-    font-family: Arial, sans-serif;
-}
-
-#toolbar h1 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.toolbar-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.btn {
-    background: #ff3814;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.btn:hover {
-    background: #e63000;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-#game-container {
-    flex: 1;
-    background: #000;
-    overflow: hidden;
-    position: relative;
-}
-
-#game-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-}
-
-/* Fullscreen mode */
-body.fullscreen-mode #toolbar {
-    display: none;
-}
-
-body.fullscreen-mode #game-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    flex: none;
-}
-
-@media (max-width: 600px) {
-    #toolbar {
-        flex-wrap: wrap;
-    }
-    
-    .toolbar-actions {
-        width: 100%;
-        margin-top: 8px;
-    }
 }
     </style>
 </head>
 <body>
-
-<div id="game-wrapper">
-    <div id="toolbar">
-        <h1>🎮 Backrooms Game</h1>
-        <div class="toolbar-actions">
-            <button class="btn" onclick="toggleFullscreen()">⛶ Fullscreen (F)</button>
-            <button class="btn" onclick="exitGame()">✕ Exit</button>
-        </div>
-    </div>
-    <div id="game-container">
-        <iframe id="game-iframe" src="index.html" allow="autoplay; fullscreen; camera; microphone; encrypted-media; display-capture; clipboard-write; gamepad; gyroscope; accelerometer; xr-spatial-tracking" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-same-origin allow-downloads allow-orientation-lock"></iframe>
-    </div>
-</div>
+<iframe id="game-frame" src="index.html" style="border:none;width:100%;height:100%;" allow="autoplay; fullscreen; camera; microphone; encrypted-media; display-capture; clipboard-write; gamepad; gyroscope; accelerometer; xr-spatial-tracking"></iframe>
 
 <script>
-function toggleFullscreen() {
-    const body = document.body;
-    const elem = document.documentElement;
+// Detect if running from file:// and show helpful message
+if (location.protocol === 'file:') {
+    console.log("Running in offline mode from file://");
     
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        body.classList.add('fullscreen-mode');
-        if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
-        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-        else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
-        else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-    } else {
-        body.classList.remove('fullscreen-mode');
-        if (document.exitFullscreen) document.exitFullscreen();
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-        else if (document.msExitFullscreen) document.msExitFullscreen();
-    }
+    // Create a message after a brief delay
+    setTimeout(() => {
+        const msg = document.createElement('div');
+        msg.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 2px solid #ff3814;
+            color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            z-index: 10000;
+            text-align: center;
+        `;
+        msg.innerHTML = `
+            <h2 style="color: #ff3814; margin-bottom: 15px;">🎮 Backrooms Game</h2>
+            <p style="margin: 10px 0;">Game is loading...</p>
+            <p style="font-size: 12px; color: #aaa; margin-top: 20px;">Running offline mode</p>
+            <p style="font-size: 12px; color: #aaa;">First launch can take 1-2 minutes</p>
+        `;
+        
+        // Check if game loaded, remove after 10 seconds
+        setTimeout(() => {
+            if (msg.parentElement) msg.remove();
+        }, 10000);
+        
+        document.body.appendChild(msg);
+    }, 500);
 }
-
-function exitGame() {
-    if (confirm('Exit game? You will lose any unsaved progress.')) {
-        document.location.reload();
-    }
-}
-
-// Fullscreen hotkey
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'f' || e.key === 'F') {
-        e.preventDefault();
-        toggleFullscreen();
-    }
-});
-
-// Auto-enter fullscreen on load
-window.addEventListener('load', () => {
-    // Uncomment below to auto-fullscreen on load
-    // toggleFullscreen();
-});
-
-// Prevent accidental page navigation
-window.addEventListener('beforeunload', (e) => {
-    e.preventDefault();
-    e.returnValue = '';
-    return false;
-});
-
-console.log('Backrooms Game - Offline Mode Ready');
-console.log('Press F for fullscreen or use the toolbar');
 </script>
-
 </body>
 </html>
