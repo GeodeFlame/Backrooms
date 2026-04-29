@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>Backrooms Game - Offline</title>
+    <meta name="description" content="The Backrooms Game is an escape-horror game for thrill-seekers. Never stop running!">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui, shrink-to-fit=no viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Backrooms Game">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            min-height: 100vh;
+            background: #000;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        #game-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #000;
+        }
+
+        .toolbar {
+            background: #1a1a1a;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #fff;
+            font-size: 14px;
+            border-bottom: 1px solid #333;
+        }
+
+        .toolbar-title {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #ff3814;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #e63000;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .toolbar-title {
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Hide scrollbars */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <div class="toolbar-title">🎮 Backrooms Game - Offline Mode</div>
+        <div class="toolbar-buttons">
+            <button onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            <button onclick="exitGame()">✕ Exit</button>
+        </div>
+    </div>
+    
+    <div id="game-container">
+        <iframe id="game-iframe" src="index.html" allow="autoplay; fullscreen; camera; microphone; encrypted-media; display-capture; clipboard-write; gamepad; gyroscope; accelerometer; xr-spatial-tracking" sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-same-origin allow-downloads allow-orientation-lock"></iframe>
+    </div>
+
+    <script>
+        // Fullscreen controls
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        function exitGame() {
+            if (confirm('Exit game? You will lose any unsaved progress.')) {
+                window.location.href = 'about:blank';
+            }
+        }
+
+        // Allow fullscreen with F key or double-click
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // Auto-hide toolbar in fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            const toolbar = document.querySelector('.toolbar');
+            if (document.fullscreenElement) {
+                toolbar.style.display = 'none';
+            } else {
+                toolbar.style.display = 'flex';
+            }
+        });
+
+        document.addEventListener('webkitfullscreenchange', () => {
+            const toolbar = document.querySelector('.toolbar');
+            if (document.webkitFullscreenElement) {
+                toolbar.style.display = 'none';
+            } else {
+                toolbar.style.display = 'flex';
+            }
+        });
+
+        // Prevent accidental page closing
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
+        console.log('Backrooms Game - Offline Mode Loaded');
+        console.log('Press F for fullscreen or use the toolbar');
+    </script>
+</body>
+</html>
